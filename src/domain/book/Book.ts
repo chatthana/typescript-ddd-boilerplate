@@ -10,13 +10,9 @@ export class Book {
   private name: string;
   private author: string;
 
-  constructor({
-    name,
-    author
-  }: IBookProps, guid?: string) {
+  constructor({ name, author }: IBookProps, guid?: string) {
     this.guid = guid || UUID();
-    this.name = name,
-      this.author = author;
+    (this.name = name), (this.author = author);
   }
 
   setName(name: string) {

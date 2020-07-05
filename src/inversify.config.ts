@@ -13,7 +13,6 @@ import { Db } from 'mongodb';
 import { BookApplication } from '@application/book/BookApplication';
 
 const initialise = async () => {
-
   const container = new Container();
 
   // Module Registration
@@ -28,15 +27,20 @@ const initialise = async () => {
   const server = new InversifyExpressServer(container);
 
   server.setConfig((app) => {
-    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(
+      bodyParser.urlencoded({
+        extended: true
+      })
+    );
     app.use(bodyParser.json());
   });
 
   const apiServer = server.build();
-  apiServer.listen(config.API_PORT);
+  apiServer.listen(config.API_PORT, () =>
+    console.log('The application is initialised on the port %s', config.API_PORT)
+  );
   // ======================================================
   return container;
-
-}
+};
 
 export { initialise };

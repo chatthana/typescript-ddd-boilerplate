@@ -1,6 +1,6 @@
-import { injectable } from "inversify";
-import { IDataMapper } from "@core/IDataMapper";
-import { Book } from "@domain/book/Book";
+import { injectable } from 'inversify';
+import { IDataMapper } from '@core/IDataMapper';
+import { Book } from '@domain/book/Book';
 
 @injectable()
 export class BookDataMapper implements IDataMapper<Book, any> {
@@ -10,6 +10,6 @@ export class BookDataMapper implements IDataMapper<Book, any> {
   }
 
   toDTO(bookEntity: Book) {
-    throw new Error('Not implemented');
+    return bookEntity;
   }
 }

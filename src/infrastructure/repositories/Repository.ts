@@ -1,19 +1,18 @@
-import { IRepository } from "@core/IRepository";
-import { unmanaged, injectable } from "inversify";
-import { Collection } from "mongodb";
-import { IDataMapper } from "@core/IDataMapper";
+import { IRepository } from '@core/IRepository';
+import { unmanaged, injectable } from 'inversify';
+import { Collection } from 'mongodb';
+import { IDataMapper } from '@core/IDataMapper';
 
 @injectable()
-export class Repository<TDomainEntity, TDalEntity> implements IRepository<TDomainEntity> {
-
+export class Repository<TDomainEntity, TDalEntity>
+implements IRepository<TDomainEntity> {
   private readonly collectionInstance: Collection;
   private readonly dataMapper: IDataMapper<TDomainEntity, TDalEntity>;
 
   constructor(
     @unmanaged() collectionInstance: Collection,
-    @unmanaged() dataMapper: IDataMapper<TDomainEntity, TDalEntity>
+    @unmanaged() dataMapper: IDataMapper<TDomainEntity, TDalEntity>,
   ) {
-
     this.collectionInstance = collectionInstance;
     this.dataMapper = dataMapper;
   }
