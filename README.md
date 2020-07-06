@@ -8,6 +8,15 @@ This API project utilises information from multiple sources to create the fine-t
 2. The application that follows `SOLID` principles as much as possible
 3. To build an pplication that benefits most of the stakeholders in an organisation
 
+### Architecture
+This project uses DDD with Onion Architecture as illustrated in below images
+
+![](https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSlKQYp4rl0kH9GTuH0V0GU1QwyAhjIPy3aJQ&usqp=CAU)
+
+Below image illustrates the more detailed architecture
+
+![](https://image.slidesharecdn.com/applifireblueprintguidelinesv22-151216102708/95/applifire-blue-print-design-guidelines-12-638.jpg?cb=1450261807)
+
 ### Technologies
 1. Node.js
 2. TypeScript
