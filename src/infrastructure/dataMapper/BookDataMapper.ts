@@ -9,7 +9,7 @@ export class BookDataMapper implements IDataMapper<Book, any> {
     return Book.create({ name, author }, guid);
   }
 
-  toDTO(bookEntity: Book) {
+  toDalEntity(bookEntity: Book) {
     return bookEntity;
   }
 }
