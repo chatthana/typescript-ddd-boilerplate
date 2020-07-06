@@ -1,18 +1,19 @@
 import { v4 as UUID } from 'uuid';
+import { Entity } from '@core/Entity';
 
 export interface IBookProps {
   name: string;
   author: string;
 }
 
-export class Book {
-  private readonly guid: string;
+export class Book extends Entity<IBookProps> {
   private name: string;
   private author: string;
 
   constructor({ name, author }: IBookProps, guid?: string) {
-    this.guid = guid || UUID();
-    (this.name = name), (this.author = author);
+    super(guid);
+    this.name = name;
+    this.author = author;
   }
 
   setName(name: string) {

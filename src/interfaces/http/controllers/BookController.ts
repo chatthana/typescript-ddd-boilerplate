@@ -19,7 +19,6 @@ export class BookController {
   @httpGet('/')
   async getAllBooks(@request() req: Request, @response() res: Response) {
     const books = await this.bookApplication.getAllBooks();
-    console.log('test');
     return res.json({
       status: '000',
       message: 'Success',

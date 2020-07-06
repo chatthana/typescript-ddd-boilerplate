@@ -1,7 +1,7 @@
-import { injectable, inject } from "inversify";
-import { IBookRepository } from "@domain/book/IBookRepository";
-import { TYPES } from "@constants/types";
-import { Book } from "@domain/book/Book";
+import { injectable, inject } from 'inversify';
+import { IBookRepository } from '@domain/book/IBookRepository';
+import { TYPES } from '@constants/types';
+import { Book } from '@domain/book/Book';
 
 @injectable()
 export class BookApplication {
