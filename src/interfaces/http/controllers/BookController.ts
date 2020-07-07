@@ -4,6 +4,7 @@ import {
   httpGet,
   request,
   response,
+  httpPost,
 } from 'inversify-express-utils';
 import { inject } from 'inversify';
 import { TYPES } from '@constants/types';
@@ -23,6 +24,26 @@ export class BookController {
       status: '000',
       message: 'Success',
       data: books,
+    });
+  }
+
+  @httpGet('/:id')
+  async getBookById(@request() req: Request, @response() res: Response) {
+    const book = await this.bookApplication.getById(req.params.id);
+    return res.json({
+      status: '000',
+      message: 'Success',
+      data: book,
+    });
+  }
+
+  @httpPost('/')
+  async createBook(@request() req: Request, @response() res: Response) {
+    const { body } = req;
+    await this.bookApplication.createBook(body);
+    return res.json({
+      status: '000',
+      message: 'Success'
     });
   }
 }

@@ -1,10 +1,10 @@
-import { injectable, inject } from "inversify";
-import { Repository } from "./Repository";
-import { Book } from "@domain/book/Book";
-import { IBookRepository } from "@domain/book/IBookRepository";
-import { TYPES } from "@constants/types";
-import { Db } from "mongodb";
-import { IDataMapper } from "@core/IDataMapper";
+import { injectable, inject } from 'inversify';
+import { Repository } from './Repository';
+import { Book } from '@domain/book/Book';
+import { IBookRepository } from '@domain/book/IBookRepository';
+import { TYPES } from '@constants/types';
+import { Db } from 'mongodb';
+import { IDataMapper } from '@core/IDataMapper';
 
 @injectable()
 export class BookRepository extends Repository<Book, any> implements IBookRepository {

@@ -14,4 +14,14 @@ export class BookApplication {
     const books = await this.bookRepository.findAll();
     return books;
   }
+
+  async getById(id: string): Promise<Book | null> {
+    const book = await this.bookRepository.findOneById(id);
+    return book;
+  }
+
+  async createBook({ name, author }: any): Promise<void> {
+    const book = Book.create({ name, author });
+    await this.bookRepository.save(book);
+  }
 }

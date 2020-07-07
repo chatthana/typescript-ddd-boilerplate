@@ -22,12 +22,13 @@ implements IRepository<TDomainEntity> {
     return dbResult.map((result) => this.dataMapper.toDomain(result));
   }
 
-  async findOneById(id: string): Promise<TDomainEntity> {
-    throw new Error('Method not implemented');
+  async findOneById(guid: string): Promise<TDomainEntity> {
+    const dbResult = await this.collectionInstance.findOne({ guid });
+    return this.dataMapper.toDomain(dbResult);
   }
 
   async save(entity: TDomainEntity): Promise<void> {
-    throw new Error('Method not implemented');
+    await this.collectionInstance.insertOne(entity);
   }
 
   async update(entity: TDomainEntity): Promise<void> {
