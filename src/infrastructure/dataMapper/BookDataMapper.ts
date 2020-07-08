@@ -3,7 +3,7 @@ import { IDataMapper } from '@core/IDataMapper';
 import { Book } from '@domain/book/Book';
 
 @injectable()
-export class BookDataMapper implements IDataMapper<Book, any> {
+export class BookDataMapper implements IDataMapper<Book> {
   toDomain(bookDbResult: any) {
     const { name, author, guid } = bookDbResult;
     return Book.create({ name, author }, guid);

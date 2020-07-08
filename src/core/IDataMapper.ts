@@ -1,4 +1,4 @@
-export interface IDataMapper<TDomainEntity, TDalEntity> {
-  toDomain(dalEntity: TDalEntity): TDomainEntity;
-  toDalEntity(entity: TDomainEntity): TDalEntity;
+export interface IDataMapper<TDomainEntity> {
+  toDomain(dalEntity: any): TDomainEntity;
+  toDalEntity(entity: TDomainEntity): any;
 }

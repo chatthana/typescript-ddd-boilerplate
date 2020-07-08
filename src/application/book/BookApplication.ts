@@ -2,6 +2,7 @@ import { injectable, inject } from 'inversify';
 import { IBookRepository } from '@domain/book/IBookRepository';
 import { TYPES } from '@constants/types';
 import { Book } from '@domain/book/Book';
+import { ApplicationError } from '@core/ApplicationError';
 
 @injectable()
 export class BookApplication {
@@ -17,6 +18,7 @@ export class BookApplication {
 
   async getById(id: string): Promise<Book | null> {
     const book = await this.bookRepository.findOneById(id);
+    if (!book) throw new ApplicationError('404', 'The book with the requested ID does not exist');
     return book;
   }
 

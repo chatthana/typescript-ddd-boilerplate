@@ -2,16 +2,17 @@ import { IRepository } from '@core/IRepository';
 import { unmanaged, injectable } from 'inversify';
 import { Collection } from 'mongodb';
 import { IDataMapper } from '@core/IDataMapper';
+import { ApplicationError } from '@core/ApplicationError';
 
 @injectable()
 export class Repository<TDomainEntity, TDalEntity>
 implements IRepository<TDomainEntity> {
   private readonly collectionInstance: Collection;
-  private readonly dataMapper: IDataMapper<TDomainEntity, TDalEntity>;
+  private readonly dataMapper: IDataMapper<TDomainEntity>;
 
   constructor(
     @unmanaged() collectionInstance: Collection,
-    @unmanaged() dataMapper: IDataMapper<TDomainEntity, TDalEntity>,
+    @unmanaged() dataMapper: IDataMapper<TDomainEntity>,
   ) {
     this.collectionInstance = collectionInstance;
     this.dataMapper = dataMapper;
@@ -22,9 +23,15 @@ implements IRepository<TDomainEntity> {
     return dbResult.map((result) => this.dataMapper.toDomain(result));
   }
 
-  async findOneById(guid: string): Promise<TDomainEntity> {
+  async findOneById(guid: string): Promise<TDomainEntity | null> {
     const dbResult = await this.collectionInstance.findOne({ guid });
+    if (!dbResult) return null;
     return this.dataMapper.toDomain(dbResult);
+  }
+
+  async doesExist(guid: string): Promise<boolean> {
+    const dbResult = await this.collectionInstance.findOne({ guid });
+    return !!dbResult;
   }
 
   async save(entity: TDomainEntity): Promise<void> {

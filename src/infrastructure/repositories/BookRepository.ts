@@ -10,7 +10,7 @@ import { IDataMapper } from '@core/IDataMapper';
 export class BookRepository extends Repository<Book, any> implements IBookRepository {
   constructor(
     @inject(TYPES.Db) private readonly db: Db,
-    @inject(TYPES.BookDataMapper) private readonly bookDataMapper: IDataMapper<Book, any>
+    @inject(TYPES.BookDataMapper) private readonly bookDataMapper: IDataMapper<Book>
   ) {
     super(db.collection('books'), bookDataMapper);
   }

@@ -11,6 +11,8 @@ import { BookRepository } from '@infrastructure/repositories/BookRepository';
 import { BookDataMapper } from '@infrastructure/dataMapper/BookDataMapper';
 import { Db } from 'mongodb';
 import { BookApplication } from '@application/book/BookApplication';
+import { errorHandler } from '@interfaces/http/middlewares/ErrorHandler';
+import { Application } from 'express';
 
 const initialise = async () => {
   const container = new Container();
@@ -26,13 +28,17 @@ const initialise = async () => {
   // API Server initialisation
   const server = new InversifyExpressServer(container);
 
-  server.setConfig((app) => {
+  server.setConfig((app: Application) => {
     app.use(
       bodyParser.urlencoded({
         extended: true
       })
     );
     app.use(bodyParser.json());
+  });
+
+  server.setErrorConfig((app: Application) => {
+    app.use(errorHandler);
   });
 
   const apiServer = server.build();

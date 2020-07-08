@@ -1,4 +1,3 @@
-import { v4 as UUID } from 'uuid';
 import { Entity } from '@core/Entity';
 
 export interface IBookProps {
