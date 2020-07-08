@@ -26,4 +26,18 @@ export class BookApplication {
     const book = Book.create({ name, author });
     await this.bookRepository.save(book);
   }
+
+  async updateBook(id: string, { name, author }: any): Promise<void> {
+    const book = await this.bookRepository.findOneById(id);
+    if (!book) throw new ApplicationError('404', 'The book with the requested ID does not exist');
+    book.setName(name);
+    book.setAuthor(author);
+    await this.bookRepository.save(book);
+  }
+
+  async deleteBook(id: string) {
+    const book = await this.bookRepository.findOneById(id);
+    if (!book) throw new ApplicationError('404', 'The book with the requested ID does not exist');
+    await this.bookRepository.delete(id);
+  }
 }

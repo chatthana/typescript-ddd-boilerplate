@@ -2,10 +2,9 @@ import { IRepository } from '@core/IRepository';
 import { unmanaged, injectable } from 'inversify';
 import { Collection } from 'mongodb';
 import { IDataMapper } from '@core/IDataMapper';
-import { ApplicationError } from '@core/ApplicationError';
 
 @injectable()
-export class Repository<TDomainEntity, TDalEntity>
+export class Repository<TDomainEntity>
 implements IRepository<TDomainEntity> {
   private readonly collectionInstance: Collection;
   private readonly dataMapper: IDataMapper<TDomainEntity>;
@@ -29,20 +28,22 @@ implements IRepository<TDomainEntity> {
     return this.dataMapper.toDomain(dbResult);
   }
 
-  async doesExist(guid: string): Promise<boolean> {
+  async doesExists(guid: string): Promise<boolean> {
     const dbResult = await this.collectionInstance.findOne({ guid });
     return !!dbResult;
   }
 
   async save(entity: TDomainEntity): Promise<void> {
-    await this.collectionInstance.insertOne(entity);
-  }
-
-  async update(entity: TDomainEntity): Promise<void> {
-    throw new Error('Method not implemented');
+    const guid = (entity as any).guid;
+    const exists = await this.doesExists(guid);
+    if (!exists) {
+      await this.collectionInstance.insertOne(entity);
+      return;
+    }
+    await this.collectionInstance.replaceOne({ guid }, entity);
   }
 
   async delete(id: string): Promise<void> {
-    throw new Error('Method not implemented');
+    await this.collectionInstance.deleteOne({ guid: id });
   }
 }

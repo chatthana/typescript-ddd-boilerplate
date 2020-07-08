@@ -7,7 +7,7 @@ import { Db } from 'mongodb';
 import { IDataMapper } from '@core/IDataMapper';
 
 @injectable()
-export class BookRepository extends Repository<Book, any> implements IBookRepository {
+export class BookRepository extends Repository<Book> implements IBookRepository {
   constructor(
     @inject(TYPES.Db) private readonly db: Db,
     @inject(TYPES.BookDataMapper) private readonly bookDataMapper: IDataMapper<Book>

@@ -6,4 +6,4 @@ export abstract class Entity<TInitProps> {
   constructor(guid?: string) {
     this.guid = guid || UUID();
   }
-}
+} 

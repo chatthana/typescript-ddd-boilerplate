@@ -5,6 +5,8 @@ import {
   request,
   response,
   httpPost,
+  httpPut,
+  httpDelete,
 } from 'inversify-express-utils';
 import { inject } from 'inversify';
 import { TYPES } from '@constants/types';
@@ -34,6 +36,27 @@ export class BookController {
   async createBook(@request() req: Request, @response() res: Response) {
     const { body } = req;
     await this.bookApplication.createBook(body);
+    return res.json({
+      status: '000',
+      message: 'Success'
+    });
+  }
+
+  @httpPut('/:id')
+  async updateBook(@request() req: Request, @response() res: Response) {
+    const { id } = req.params;
+    const { body } = req;
+    await this.bookApplication.updateBook(id, body);
+    return res.json({
+      status: '000',
+      message: 'Success'
+    });
+  }
+
+  @httpDelete('/:id')
+  async deleteBook(@request() req: Request, @response() res: Response) {
+    const { id } = req.params;
+    await this.bookApplication.deleteBook(id);
     return res.json({
       status: '000',
       message: 'Success'
