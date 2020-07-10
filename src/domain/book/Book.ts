@@ -3,16 +3,19 @@ import { Entity } from '@core/Entity';
 export interface IBookProps {
   name: string;
   author: string;
+  price: number;
 }
 
 export class Book extends Entity<IBookProps> {
   private name: string;
   private author: string;
+  private price: number;
 
-  constructor({ name, author }: IBookProps, guid?: string) {
+  constructor({ name, author, price }: IBookProps, guid?: string) {
     super(guid);
     this.name = name;
     this.author = author;
+    this.price = price;
   }
 
   setName(name: string) {
@@ -23,7 +26,11 @@ export class Book extends Entity<IBookProps> {
     this.author = authorName;
   }
 
-  static create({ name, author }: IBookProps, guid?: string) {
-    return new Book({ name, author }, guid);
+  setPrice(amount: number) {
+    this.price = amount;
+  }
+
+  static create(props: IBookProps, guid?: string) {
+    return new Book(props, guid);
   }
 }

@@ -5,8 +5,8 @@ import { Book } from '@domain/book/Book';
 @injectable()
 export class BookDataMapper implements IDataMapper<Book> {
   toDomain(bookDbResult: any) {
-    const { name, author, guid } = bookDbResult;
-    return Book.create({ name, author }, guid);
+    const { name, author, price, guid } = bookDbResult;
+    return Book.create({ name, author, price }, guid);
   }
 
   toDalEntity(bookEntity: Book) {
