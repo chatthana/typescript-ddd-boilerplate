@@ -1,4 +1,4 @@
-import { Entity } from '@core/Entity';
+import { AggregateRoot } from '@core/AggregateRoot';
 
 export interface IBookProps {
   name: string;
@@ -6,7 +6,7 @@ export interface IBookProps {
   price: number;
 }
 
-export class Book extends Entity<IBookProps> {
+export class Book extends AggregateRoot {
   private name: string;
   private author: string;
   private price: number;
@@ -16,18 +16,6 @@ export class Book extends Entity<IBookProps> {
     this.name = name;
     this.author = author;
     this.price = price;
-  }
-
-  setName(name: string) {
-    this.name = name;
-  }
-
-  setAuthor(authorName: string) {
-    this.author = authorName;
-  }
-
-  setPrice(amount: number) {
-    this.price = amount;
   }
 
   static create(props: IBookProps, guid?: string) {

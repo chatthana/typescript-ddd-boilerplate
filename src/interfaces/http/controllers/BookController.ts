@@ -10,14 +10,13 @@ import {
 } from 'inversify-express-utils';
 import { inject } from 'inversify';
 import { TYPES } from '@constants/types';
-import { BookApplication } from '@application/book/BookApplication';
 import { ok } from '../processors/response';
 
 @controller('/api/v1/books')
 export class BookController {
   constructor(
     @inject(TYPES.BookApplication)
-    private readonly bookApplication: BookApplication
+    private readonly bookApplication: any
   ) {}
 
   @httpGet('/')

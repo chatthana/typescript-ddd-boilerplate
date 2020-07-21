@@ -46,6 +46,9 @@
       "@core/*": [
         "core/*"
       ],
+      "@commands/*": [
+        "commands/*"
+      ],
       "@config/*": [
         "config/*"
       ],

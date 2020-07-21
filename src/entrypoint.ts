@@ -1,5 +1,6 @@
 import { Container } from 'inversify';
 import { TYPES } from '@constants/types';
+import Events from 'events';
 import { InversifyExpressServer } from 'inversify-express-utils';
 import bodyParser from 'body-parser';
 import config from '@config/main';
@@ -10,19 +11,22 @@ import { IBookRepository } from '@domain/book/IBookRepository';
 import { BookRepository } from '@infrastructure/repositories/BookRepository';
 import { BookDataMapper } from '@infrastructure/dataMapper/BookDataMapper';
 import { Db } from 'mongodb';
-import { BookApplication } from '@application/book/BookApplication';
+// import { BookApplication } from '@application/book/BookApplication';
 import { errorHandler } from '@interfaces/http/middlewares/ErrorHandler';
 import { Application } from 'express';
+import { getEventBus } from '@infrastructure/eventbus/EventBus';
 
 const initialise = async () => {
   const container = new Container();
 
   // Module Registration
   const db: Db = await createMongodbConnection(config.MONGODB_URI);
+  const eventbus: Events.EventEmitter = getEventBus();
   container.bind<Db>(TYPES.Db).toConstantValue(db);
+  container.bind<Events.EventEmitter>(TYPES.EventBus).toConstantValue(eventbus);
   container.bind<BookDataMapper>(TYPES.BookDataMapper).to(BookDataMapper);
   container.bind<IBookRepository>(TYPES.BookRepository).to(BookRepository);
-  container.bind<BookApplication>(TYPES.BookApplication).to(BookApplication);
+  // container.bind<BookApplication>(TYPES.BookApplication).to(BookApplication);
   // ======================================================
 
   // API Server initialisation
