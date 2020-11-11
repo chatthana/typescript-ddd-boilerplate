@@ -15,6 +15,9 @@ import { Db } from 'mongodb';
 import { errorHandler } from '@interfaces/http/middlewares/ErrorHandler';
 import { Application } from 'express';
 import { getEventBus } from '@infrastructure/eventbus/EventBus';
+import { CommandBus } from '@infrastructure/commandBus';
+import { CreateBookCommand } from '@commands/book/CreateBook';
+import { CreateBookCommandHandler } from '@commands/book/CreateBookCommandHandler';
 
 const initialise = async () => {
   const container = new Container();
@@ -22,12 +25,18 @@ const initialise = async () => {
   // Module Registration
   const db: Db = await createMongodbConnection(config.MONGODB_URI);
   const eventbus: Events.EventEmitter = getEventBus();
+
+  const commandBus = new CommandBus();
+  commandBus.registerHandler(CreateBookCommand.name, new CreateBookCommandHandler);
+
   container.bind<Db>(TYPES.Db).toConstantValue(db);
   container.bind<Events.EventEmitter>(TYPES.EventBus).toConstantValue(eventbus);
   container.bind<BookDataMapper>(TYPES.BookDataMapper).to(BookDataMapper);
   container.bind<IBookRepository>(TYPES.BookRepository).to(BookRepository);
+  container.bind<CommandBus>(TYPES.CommandBus).toConstantValue(commandBus);
   // container.bind<BookApplication>(TYPES.BookApplication).to(BookApplication);
   // ======================================================
+  
 
   // API Server initialisation
   const server = new InversifyExpressServer(container);

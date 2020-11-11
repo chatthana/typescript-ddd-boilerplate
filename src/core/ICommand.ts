@@ -1,4 +1,6 @@
-export interface ICommand {
+import { Message } from "./IMessage";
+
+export interface ICommand extends Message {
   guid: string;
   version: number;
 }

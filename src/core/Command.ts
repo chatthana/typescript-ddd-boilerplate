@@ -2,7 +2,7 @@ import { ICommand } from './ICommand';
 
 import { v4 as uuidv4 } from 'uuid';
 
-export class Command implements ICommand {
+export abstract class Command implements ICommand {
   public guid: string;
   public version: number;
 

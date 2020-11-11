@@ -11,4 +11,7 @@ export const TYPES = {
 
   // Application Services
   BookApplication: Symbol('BookApplication'),
+
+  // Command Bus
+  CommandBus: Symbol('CommandBus'),
 };
