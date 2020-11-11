@@ -46,6 +46,9 @@
       "@core/*": [
         "core/*"
       ],
+      "@commandHandlers/*": [
+        "commandHandlers/*"
+      ],
       "@commands/*": [
         "commands/*"
       ],

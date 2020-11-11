@@ -17,7 +17,7 @@ import { Application } from 'express';
 import { getEventBus } from '@infrastructure/eventbus/EventBus';
 import { CommandBus } from '@infrastructure/commandBus';
 import { CreateBookCommand } from '@commands/book/CreateBook';
-import { CreateBookCommandHandler } from '@commands/book/CreateBookCommandHandler';
+import { CreateBookCommandHandler } from '@commandHandlers/book/CreateBookCommandHandler';
 
 const initialise = async () => {
   const container = new Container();
@@ -30,11 +30,10 @@ const initialise = async () => {
   commandBus.registerHandler(CreateBookCommand.name, new CreateBookCommandHandler);
 
   container.bind<Db>(TYPES.Db).toConstantValue(db);
+  container.bind<CommandBus>(TYPES.CommandBus).toConstantValue(commandBus);
   container.bind<Events.EventEmitter>(TYPES.EventBus).toConstantValue(eventbus);
   container.bind<BookDataMapper>(TYPES.BookDataMapper).to(BookDataMapper);
   container.bind<IBookRepository>(TYPES.BookRepository).to(BookRepository);
-  container.bind<CommandBus>(TYPES.CommandBus).toConstantValue(commandBus);
-  // container.bind<BookApplication>(TYPES.BookApplication).to(BookApplication);
   // ======================================================
   
 
