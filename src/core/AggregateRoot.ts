@@ -1,17 +1,33 @@
 import { v4 as UUID } from 'uuid';
+import { IEvent } from './IEvent';
 
 export abstract class AggregateRoot {
-  public readonly guid: string;
+  [x: string]: any;
+  public guid: string;
+  private __changes: any[] = [];
 
   constructor(guid?: string) {
     this.guid = guid || UUID();
   }
 
-  protected apply(event: any) {
-    console.log(event); 
+  public getUncommittedEvents(): IEvent[] {
+    return this.__changes;
   }
 
-  public loadFromHistory(events: any) {
+  public markChangesAsCommitted(): void {
+    this.__changes = [];
+  }
+
+  protected applyChange(event: IEvent) {
+    this.applyEvent(event);
+  }
+
+  private applyEvent(event: IEvent, isNew?: boolean) {
+    this.apply(event);
+    this.__changes.push(event);
+  }
+  
+  public loadFromHistory(events: IEvent[]) {
     return events;
   }
 } 

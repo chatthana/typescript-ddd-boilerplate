@@ -7,17 +7,16 @@ import config from '@config/main';
 
 import '@interfaces/http/controllers';
 import { createMongodbConnection } from '@infrastructure/db/mongodb';
-import { IBookRepository } from '@domain/book/IBookRepository';
-import { BookRepository } from '@infrastructure/repositories/BookRepository';
-import { BookDataMapper } from '@infrastructure/dataMapper/BookDataMapper';
+// import { BookDataMapper } from '@infrastructure/dataMapper/BookDataMapper';
 import { Db } from 'mongodb';
-// import { BookApplication } from '@application/book/BookApplication';
 import { errorHandler } from '@interfaces/http/middlewares/ErrorHandler';
 import { Application } from 'express';
 import { getEventBus } from '@infrastructure/eventbus/EventBus';
 import { CommandBus } from '@infrastructure/commandBus';
 import { CreateBookCommand } from '@commands/book/CreateBook';
 import { CreateBookCommandHandler } from '@commandHandlers/book/CreateBookCommandHandler';
+import { Repository } from '@infrastructure/repositories/Repository';
+import { Book } from '@domain/book/Book';
 
 const initialise = async () => {
   const container = new Container();
@@ -27,13 +26,13 @@ const initialise = async () => {
   const eventbus: Events.EventEmitter = getEventBus();
 
   const commandBus = new CommandBus();
-  commandBus.registerHandler(CreateBookCommand.name, new CreateBookCommandHandler);
+  commandBus.registerHandler(CreateBookCommand.name, new CreateBookCommandHandler(eventbus, new Repository<Book>(db, Book)));
 
   container.bind<Db>(TYPES.Db).toConstantValue(db);
   container.bind<CommandBus>(TYPES.CommandBus).toConstantValue(commandBus);
   container.bind<Events.EventEmitter>(TYPES.EventBus).toConstantValue(eventbus);
-  container.bind<BookDataMapper>(TYPES.BookDataMapper).to(BookDataMapper);
-  container.bind<IBookRepository>(TYPES.BookRepository).to(BookRepository);
+  // container.bind<BookDataMapper>(TYPES.BookDataMapper).to(BookDataMapper);
+  // container.bind<IBookRepository>(TYPES.BookRepository).to(BookRepository);
   // ======================================================
   
 
