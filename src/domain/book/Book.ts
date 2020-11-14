@@ -21,25 +21,25 @@ export class Book extends AggregateRoot {
 
   constructor(guid?: string, name?: string, author?: string, price?: number) {
     super(guid);
-    console.log(name);
-    this.applyChange(new BookCreated(guid!, name!, author!, price!));
+    // This if block is required as we instantiate the aggregate root in the repository
+    if (guid && name && author && price) {
+      this.applyChange(new BookCreated(this.guid, name!, author!, price!));
+    }
   }
 
-  public apply(event: BookCreated): void;
+  public changeAuthor(author: string) {
+    this.author = author;
+    this.applyBookAuthorChanged(new BookAuthorChanged(this.guid, author));
+  }
 
-  public apply(event: BookAuthorChanged): void;
+  public applyBookCreated(event: BookCreated): void {
+    this.guid = event.guid;
+    this.name = event.name;
+    this.author = event.author;
+    this.price = event.price;
+  }
 
-  public apply(event: any): void {
-    console.log(event);
-    switch (event.constructor.name) {
-      case 'BookCreated':
-        this.name = event.name;
-        this.author = event.author;
-        this.price = event.price;
-      case 'BookAuthorChanged':
-        this.author = event.author;
-      default:
-        break;
-    }
+  public applyBookAuthorChanged(event: BookAuthorChanged): void {
+    this.author = event.author;
   }
 }

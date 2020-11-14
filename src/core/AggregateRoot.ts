@@ -1,3 +1,4 @@
+import e from 'express';
 import { v4 as UUID } from 'uuid';
 import { IEvent } from './IEvent';
 
@@ -19,15 +20,17 @@ export abstract class AggregateRoot {
   }
 
   protected applyChange(event: IEvent) {
-    this.applyEvent(event);
+    this.applyEvent(event, true);
   }
 
-  private applyEvent(event: IEvent, isNew?: boolean) {
-    this.apply(event);
-    this.__changes.push(event);
+  private applyEvent(event: IEvent, isNew: boolean = false) {
+    this[`apply${event.constructor.name}`](event);
+    if (isNew) this.__changes.push(event);
   }
   
   public loadFromHistory(events: IEvent[]) {
-    return events;
+    for (const event of events) {
+      this.applyEvent(event);
+    }
   }
 } 

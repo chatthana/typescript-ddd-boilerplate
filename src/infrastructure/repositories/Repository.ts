@@ -5,6 +5,7 @@ import { IDataMapper } from '@core/IDataMapper';
 import { TYPES } from '@constants/types';
 import { AggregateRoot } from '@core/AggregateRoot';
 import { Book } from '@domain/book/Book';
+import { IEventStore } from '@core/IEventStore';
 
 // @injectable()
 // export class Repository<TDomainEntity>
@@ -54,23 +55,24 @@ import { Book } from '@domain/book/Book';
 @injectable()
 export class Repository<T extends AggregateRoot> implements IRepository<T> {
   
-  public eventCollection: Collection;
+  // public eventCollection: Collection;
   
   constructor(
-    private readonly dbClient: Db,
+    private readonly eventStore: IEventStore,
     private readonly Type: { new (): T }
   ) {
-    this.eventCollection = this.dbClient.collection('book-events');
+    // this.eventCollection = this.dbClient.collection('book-events');
   }
 
   async save(aggregateRoot: T) {
-    return aggregateRoot.getUncommittedEvents();
+    await this.eventStore.saveEvents(aggregateRoot.guid, aggregateRoot.getUncommittedEvents());
+    aggregateRoot.markChangesAsCommitted();
   }
 
   async getById(guid: string) {
-    const aggregateRoot = new this.Type();
-    const history = await this.eventCollection.find({ guid }).toArray();
-    console.log(aggregateRoot.loadFromHistory(history));
+    const aggregateRoot = new this.Type() as T;
+    const history = await this.eventStore.getEventsForAggregate(guid);
+    aggregateRoot.loadFromHistory(history);
     return aggregateRoot;
   }
 }

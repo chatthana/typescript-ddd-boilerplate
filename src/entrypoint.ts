@@ -17,6 +17,10 @@ import { CreateBookCommand } from '@commands/book/CreateBook';
 import { CreateBookCommandHandler } from '@commandHandlers/book/CreateBookCommandHandler';
 import { Repository } from '@infrastructure/repositories/Repository';
 import { Book } from '@domain/book/Book';
+import { IEventStore } from '@core/IEventStore';
+import { EventStore } from '@infrastructure/eventstore';
+import { UpdateBookAuthor } from '@commands/book/UpdateBookAuthor';
+import { UpdateBookAuthorCommandHandler } from '@commandHandlers/book/UpdateBookAuthorCommandHandler';
 
 const initialise = async () => {
   const container = new Container();
@@ -24,9 +28,11 @@ const initialise = async () => {
   // Module Registration
   const db: Db = await createMongodbConnection(config.MONGODB_URI);
   const eventbus: Events.EventEmitter = getEventBus();
+  const eventStore: IEventStore = new EventStore();
 
   const commandBus = new CommandBus();
-  commandBus.registerHandler(CreateBookCommand.name, new CreateBookCommandHandler(eventbus, new Repository<Book>(db, Book)));
+  commandBus.registerHandler(CreateBookCommand.name, new CreateBookCommandHandler(eventbus, new Repository<Book>(eventStore, Book)));
+  commandBus.registerHandler(UpdateBookAuthor.name, new UpdateBookAuthorCommandHandler(eventbus, new Repository<Book>(eventStore, Book)));
 
   container.bind<Db>(TYPES.Db).toConstantValue(db);
   container.bind<CommandBus>(TYPES.CommandBus).toConstantValue(commandBus);

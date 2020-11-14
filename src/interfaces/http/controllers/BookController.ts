@@ -13,6 +13,7 @@ import { TYPES } from '@constants/types';
 import { ok } from '../processors/response';
 import { CommandBus } from '@infrastructure/commandBus';
 import { CreateBookCommand } from '@commands/book/CreateBook';
+import { UpdateBookAuthor } from '@commands/book/UpdateBookAuthor';
 
 @controller('/api/v1/books')
 export class BookController {
@@ -46,6 +47,13 @@ export class BookController {
       status: '000',
       message: 'Success'
     });
+  }
+
+  @httpPut('/:guid/author')
+  async updateAuthor(@request() req: Request, @response() res: Response) {
+    const { author } = req.body;
+    const command = new UpdateBookAuthor(author, req.params.guid);
+    this.commandBus.send(command);
   }
 
   // @httpPut('/:id')
