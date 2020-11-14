@@ -29,7 +29,7 @@ export class Book extends AggregateRoot {
 
   public changeAuthor(author: string) {
     this.author = author;
-    this.applyBookAuthorChanged(new BookAuthorChanged(this.guid, author));
+    this.applyChange(new BookAuthorChanged(this.guid, author));
   }
 
   public applyBookCreated(event: BookCreated): void {
