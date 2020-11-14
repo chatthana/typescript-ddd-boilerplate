@@ -1,25 +1,31 @@
 import { EventDescriptor } from "@core/EventDescriptor";
 import { IEvent } from "@core/IEvent";
 import { IEventStore } from "@core/IEventStore";
+import { BulkWriteOperation, Collection, Db } from "mongodb";
 
 export class EventStore implements IEventStore {
 
-  private events: any = {};
+  private eventCollection: Collection;
 
-  saveEvents(aggregateGuid: string, events: IEvent[]) {
-    
-    if (!this.events[aggregateGuid]) {
-      this.events[aggregateGuid] = [];
-    }
-
-    for (const event of events) {
-      this.events[aggregateGuid].push(new EventDescriptor(aggregateGuid, event));
-    }
-
+  constructor(
+    private readonly dbClient: Db
+  ) {
+    this.eventCollection = dbClient.collection('events');
   }
 
-  getEventsForAggregate(aggregateGuid: string): IEvent[] {
-    if (!this.events[aggregateGuid]) return [];
-    return this.events[aggregateGuid].map((eventDescriptor: EventDescriptor) => eventDescriptor.event);
+  async saveEvents(aggregateGuid: string, events: IEvent[]) {
+    const operations: any[] = [];
+
+    for (const event of events) {
+      const eventObject = new EventDescriptor(aggregateGuid, event.constructor.name, event);
+      operations.push({ insertOne: eventObject });
+    }
+
+    await this.eventCollection.bulkWrite(operations);
+  }
+
+  async getEventsForAggregate(aggregateGuid: string): Promise<IEvent[]> {
+    const events = await this.eventCollection.find({ aggregateGuid }).toArray();
+    return events.map((eventDescriptor: EventDescriptor) => eventDescriptor.event);
   }
 }

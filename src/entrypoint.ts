@@ -28,7 +28,7 @@ const initialise = async () => {
   // Module Registration
   const db: Db = await createMongodbConnection(config.MONGODB_URI);
   const eventbus: Events.EventEmitter = getEventBus();
-  const eventStore: IEventStore = new EventStore();
+  const eventStore: IEventStore = new EventStore(db);
 
   const commandBus = new CommandBus();
   commandBus.registerHandler(CreateBookCommand.name, new CreateBookCommandHandler(eventbus, new Repository<Book>(eventStore, Book)));
