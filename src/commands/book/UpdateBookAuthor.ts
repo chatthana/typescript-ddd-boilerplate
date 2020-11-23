@@ -3,8 +3,9 @@ import { Command } from '@core/Command';
 
 export class UpdateBookAuthor extends Command {
   constructor(
-    public author: string,
-    guid?: string,
+    public readonly guid: string,
+    public readonly author: string,
+    public readonly originalVersion: number,
   ) {
     super(guid);
   }

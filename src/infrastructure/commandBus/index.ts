@@ -14,9 +14,9 @@ export class CommandBus {
     this.handlers.set(commandName, handler);
   }
 
-  public send(command: ICommand) {
+  public async send(command: ICommand) {
     if (this.handlers.get(command.constructor.name)) {
-      this.handlers.get(command.constructor.name).handle(command);
+      await this.handlers.get(command.constructor.name).handle(command);
     }
   }
 

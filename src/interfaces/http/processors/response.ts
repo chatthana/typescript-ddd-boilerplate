@@ -1,4 +1,4 @@
-export const ok = (data: any, message: string) => ({
+export const ok = (message: string, data: any) => ({
   status: '000',
   message: message || 'Success',
   data

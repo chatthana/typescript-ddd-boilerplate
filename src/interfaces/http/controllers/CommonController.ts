@@ -6,6 +6,6 @@ import { ok } from '../processors/response';
 export class CommonController {
   @httpGet('/healthz')
   async healthcheck(@request() req: Request, @response() res: Response) {
-    return res.json(ok(undefined, 'Success'));
+    return res.json(ok('Success', undefined));
   }
 }

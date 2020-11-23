@@ -14,4 +14,11 @@ export const TYPES = {
 
   // Command Bus
   CommandBus: Symbol('CommandBus'),
+
+  // Event
+  Event: Symbol('Event'),
+  EventHandler: Symbol('EventHandler'),
+
+  // Event Handlers
+  BookCreatedEventHandler: Symbol('BookCreatedEventHandler'),
 };

@@ -41,19 +41,17 @@ export class BookController {
     const { name, author, price } = req.body;
     
     const command = new CreateBookCommand(name, author, price);
-    this.commandBus.send(command);
+    await this.commandBus.send(command);
 
-    return res.json({
-      status: '000',
-      message: 'Success'
-    });
+    return res.json(ok('Successfully created the book', undefined));
   }
 
   @httpPut('/:guid/author')
   async updateAuthor(@request() req: Request, @response() res: Response) {
-    const { author } = req.body;
-    const command = new UpdateBookAuthor(author, req.params.guid);
-    this.commandBus.send(command);
+    const { author, version } = req.body;
+    const command = new UpdateBookAuthor(req.params.guid, author, version);
+    await this.commandBus.send(command);
+    return res.json(ok('Successfully update the book', undefined));
   }
 
   // @httpPut('/:id')

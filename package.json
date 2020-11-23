@@ -11,6 +11,7 @@
   "_moduleAliases": {
     "@core": "dist/core",
     "@commandHandlers": "dist/commandHandlers",
+    "@eventHandlers": "dist/eventHandlers",
     "@commands": "dist/commands",
     "@config": "dist/config",
     "@constants": "dist/constants",

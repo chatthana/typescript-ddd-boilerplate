@@ -21,6 +21,11 @@ import { IEventStore } from '@core/IEventStore';
 import { EventStore } from '@infrastructure/eventstore';
 import { UpdateBookAuthor } from '@commands/book/UpdateBookAuthor';
 import { UpdateBookAuthorCommandHandler } from '@commandHandlers/book/UpdateBookAuthorCommandHandler';
+import { BookCreatedEventHandler } from '@eventHandlers/book/BookCreatedEventHandler';
+import { IEventHandler } from '@core/IEventHandler';
+import { BookEvent } from '@domain/book/events';
+import { EventHandler } from '@infrastructure/eventHandler';
+import { BookAuthorChangedEventHandler } from '@eventHandlers/book/BookAuthorChangedEventHandler';
 
 const initialise = async () => {
   const container = new Container();
@@ -28,8 +33,9 @@ const initialise = async () => {
   // Module Registration
   const db: Db = await createMongodbConnection(config.MONGODB_URI);
   const eventbus: Events.EventEmitter = getEventBus();
-  const eventStore: IEventStore = new EventStore(db);
+  const eventStore: IEventStore = new EventStore(db, eventbus);
 
+  // Register command handlers to the bus
   const commandBus = new CommandBus();
   commandBus.registerHandler(CreateBookCommand.name, new CreateBookCommandHandler(eventbus, new Repository<Book>(eventStore, Book)));
   commandBus.registerHandler(UpdateBookAuthor.name, new UpdateBookAuthorCommandHandler(eventbus, new Repository<Book>(eventStore, Book)));
@@ -37,8 +43,9 @@ const initialise = async () => {
   container.bind<Db>(TYPES.Db).toConstantValue(db);
   container.bind<CommandBus>(TYPES.CommandBus).toConstantValue(commandBus);
   container.bind<Events.EventEmitter>(TYPES.EventBus).toConstantValue(eventbus);
-  // container.bind<BookDataMapper>(TYPES.BookDataMapper).to(BookDataMapper);
-  // container.bind<IBookRepository>(TYPES.BookRepository).to(BookRepository);
+  container.bind<EventHandler>(TYPES.EventHandler).to(EventHandler);
+  container.bind<IEventHandler<BookEvent>>(TYPES.Event).to(BookCreatedEventHandler);
+  container.bind<IEventHandler<BookEvent>>(TYPES.Event).to(BookAuthorChangedEventHandler);
   // ======================================================
   
 

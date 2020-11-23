@@ -64,8 +64,8 @@ export class Repository<T extends AggregateRoot> implements IRepository<T> {
     // this.eventCollection = this.dbClient.collection('book-events');
   }
 
-  async save(aggregateRoot: T) {
-    await this.eventStore.saveEvents(aggregateRoot.guid, aggregateRoot.getUncommittedEvents());
+  async save(aggregateRoot: T, expectedVersion: number) {
+    await this.eventStore.saveEvents(aggregateRoot.guid, aggregateRoot.getUncommittedEvents(), expectedVersion);
     aggregateRoot.markChangesAsCommitted();
   }
 

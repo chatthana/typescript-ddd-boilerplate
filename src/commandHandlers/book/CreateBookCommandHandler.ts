@@ -16,8 +16,7 @@ export class CreateBookCommandHandler implements ICommandHandler<CreateBookComma
   ) {}
   
   async handle(command: CreateBookCommand) {
-    
     const book = new Book(command.guid, command.name, command.author, command.price);
-    this.repository.save(book);
+    this.repository.save(book, -1);
   }
 }
