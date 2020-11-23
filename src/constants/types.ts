@@ -1,6 +1,7 @@
 export const TYPES = {
   // Dependencies
   Db: Symbol('Db'),
+  Redis: Symbol('Redis'),
   EventBus: Symbol('EventBus'),
 
   // Repositories

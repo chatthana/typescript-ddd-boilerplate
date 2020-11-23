@@ -10,6 +10,7 @@ import { EventHandler } from '@infrastructure/eventHandler';
 
 (async () => {
   const container = await initialise();
+
   const allEventHandlers = container.getAll(TYPES.Event);
   const baseEventHandler = container.get<EventHandler>(TYPES.EventHandler);
   baseEventHandler.initialise(allEventHandlers);

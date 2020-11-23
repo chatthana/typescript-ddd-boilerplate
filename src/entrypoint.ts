@@ -7,8 +7,8 @@ import config from '@config/main';
 
 import '@interfaces/http/controllers';
 import { createMongodbConnection } from '@infrastructure/db/mongodb';
-// import { BookDataMapper } from '@infrastructure/dataMapper/BookDataMapper';
 import { Db } from 'mongodb';
+import Redis from 'ioredis';
 import { errorHandler } from '@interfaces/http/middlewares/ErrorHandler';
 import { Application } from 'express';
 import { getEventBus } from '@infrastructure/eventbus/EventBus';
@@ -25,6 +25,7 @@ import { BookCreatedEventHandler } from '@eventHandlers/book/BookCreatedEventHan
 import { IEventHandler } from '@core/IEventHandler';
 import { BookEvent } from '@domain/book/events';
 import { EventHandler } from '@infrastructure/eventHandler';
+import RedisClient from '@infrastructure/redis';
 import { BookAuthorChangedEventHandler } from '@eventHandlers/book/BookAuthorChangedEventHandler';
 
 const initialise = async () => {
@@ -41,6 +42,7 @@ const initialise = async () => {
   commandBus.registerHandler(UpdateBookAuthor.name, new UpdateBookAuthorCommandHandler(eventbus, new Repository<Book>(eventStore, Book)));
 
   container.bind<Db>(TYPES.Db).toConstantValue(db);
+  container.bind<Redis.Redis>(TYPES.Redis).toConstantValue(RedisClient);
   container.bind<CommandBus>(TYPES.CommandBus).toConstantValue(commandBus);
   container.bind<Events.EventEmitter>(TYPES.EventBus).toConstantValue(eventbus);
   container.bind<EventHandler>(TYPES.EventHandler).to(EventHandler);
