@@ -12,10 +12,11 @@ import { TYPES } from '@constants/types';
 import { ok } from '../processors/response';
 import { CommandBus } from '@infrastructure/commandBus';
 import { CreateBookCommand } from '@commands/book/CreateBook';
-import { UpdateBookAuthor } from '@commands/book/UpdateBookAuthor';
+import { UpdateBookAuthorCommand } from '@commands/book/UpdateBookAuthor';
 
 import Redis from 'ioredis';
 import { NotFoundException } from '@core/ApplicationError';
+import { UpdateBookCommand } from '@commands/book/UpdateBook';
 
 @controller('/api/v1/books')
 export class BookController {
@@ -62,8 +63,16 @@ export class BookController {
   @httpPut('/:guid/author')
   async updateAuthor(@request() req: Request, @response() res: Response) {
     const { author, version } = req.body;
-    const command = new UpdateBookAuthor(req.params.guid, author, version);
+    const command = new UpdateBookAuthorCommand(req.params.guid, author, version);
     await this.commandBus.send(command);
-    return res.json(ok('Successfully update the book', undefined));
+    return res.json(ok('Successfully updated the book', undefined));
+  }
+
+  @httpPut('/:guid')
+  async updateBook(@request() req: Request, @response() res: Response) {
+    const { name, author, price, version } = req.body;
+    const command = new UpdateBookCommand(req.params.guid, name, author, price, version);
+    await this.commandBus.send(command);
+    return res.json(ok('Successfully updated the book', undefined));
   }
 }

@@ -2,6 +2,7 @@ import { AggregateRoot } from '@core/AggregateRoot';
 import { IEvent } from '@core/IEvent';
 import { BookCreated } from './events/BookCreated';
 import { BookAuthorChanged } from './events/BookAuthorChanged';
+import { BookUpdated } from './events/BookUpdated';
 
 export interface IBookProps {
   name: string;
@@ -32,6 +33,13 @@ export class Book extends AggregateRoot {
     this.applyChange(new BookAuthorChanged(this.guid, author));
   }
 
+  public update(name: string, author: string, price: number) {
+    this.name = name;
+    this.author = author;
+    this.price = price;
+    this.applyChange(new BookUpdated(this.guid, name, author, price));
+  }
+
   public applyBookCreated(event: BookCreated): void {
     this.guid = event.guid;
     this.name = event.name;
@@ -41,5 +49,11 @@ export class Book extends AggregateRoot {
 
   public applyBookAuthorChanged(event: BookAuthorChanged): void {
     this.author = event.author;
+  }
+
+  public applyBookUpdated(event: any): void {
+    this.name = event.name;
+    this.author = event.author;
+    this.price = event.price;
   }
 }

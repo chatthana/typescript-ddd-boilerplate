@@ -19,7 +19,7 @@ import { Repository } from '@infrastructure/repositories/Repository';
 import { Book } from '@domain/book/Book';
 import { IEventStore } from '@core/IEventStore';
 import { EventStore } from '@infrastructure/eventstore';
-import { UpdateBookAuthor } from '@commands/book/UpdateBookAuthor';
+import { UpdateBookAuthorCommand } from '@commands/book/UpdateBookAuthor';
 import { UpdateBookAuthorCommandHandler } from '@commandHandlers/book/UpdateBookAuthorCommandHandler';
 import { BookCreatedEventHandler } from '@eventHandlers/book/BookCreatedEventHandler';
 import { IEventHandler } from '@core/IEventHandler';
@@ -27,6 +27,9 @@ import { BookEvent } from '@domain/book/events';
 import { EventHandler } from '@infrastructure/eventHandler';
 import RedisClient from '@infrastructure/redis';
 import { BookAuthorChangedEventHandler } from '@eventHandlers/book/BookAuthorChangedEventHandler';
+import { UpdateBookCommand } from '@commands/book/UpdateBook';
+import { UpdateBookCommandHandler } from '@commandHandlers/book/UpdateBookCommandHandler';
+import { BookUpdatedEventHandler } from '@eventHandlers/book/BookUpdatedEventHandler';
 
 const initialise = async () => {
   const container = new Container();
@@ -38,8 +41,9 @@ const initialise = async () => {
 
   // Register command handlers to the bus
   const commandBus = new CommandBus();
-  commandBus.registerHandler(CreateBookCommand.name, new CreateBookCommandHandler(eventbus, new Repository<Book>(eventStore, Book)));
-  commandBus.registerHandler(UpdateBookAuthor.name, new UpdateBookAuthorCommandHandler(eventbus, new Repository<Book>(eventStore, Book)));
+  commandBus.registerHandler(CreateBookCommand.name, new CreateBookCommandHandler(new Repository<Book>(eventStore, Book)));
+  commandBus.registerHandler(UpdateBookAuthorCommand.name, new UpdateBookAuthorCommandHandler(new Repository<Book>(eventStore, Book)));
+  commandBus.registerHandler(UpdateBookCommand.name, new UpdateBookCommandHandler(new Repository<Book>(eventStore, Book)));
 
   container.bind<Db>(TYPES.Db).toConstantValue(db);
   container.bind<Redis.Redis>(TYPES.Redis).toConstantValue(RedisClient);
@@ -48,6 +52,7 @@ const initialise = async () => {
   container.bind<EventHandler>(TYPES.EventHandler).to(EventHandler);
   container.bind<IEventHandler<BookEvent>>(TYPES.Event).to(BookCreatedEventHandler);
   container.bind<IEventHandler<BookEvent>>(TYPES.Event).to(BookAuthorChangedEventHandler);
+  container.bind<IEventHandler<BookEvent>>(TYPES.Event).to(BookUpdatedEventHandler);
   // ======================================================
   
 
