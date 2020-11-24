@@ -31,6 +31,7 @@ import { UpdateBookCommand } from '@commands/book/UpdateBook';
 import { UpdateBookCommandHandler } from '@commandHandlers/book/UpdateBookCommandHandler';
 import { BookUpdatedEventHandler } from '@eventHandlers/book/BookUpdatedEventHandler';
 import { FakeNotificationEventHandler } from '@eventHandlers/book/FakeNotificationEventHandler';
+import { IReadModelFacade, ReadModelFacade } from '@domain/book/ReadModel';
 
 const initialise = async () => {
   const container = new Container();
@@ -50,6 +51,7 @@ const initialise = async () => {
   container.bind<Redis.Redis>(TYPES.Redis).toConstantValue(RedisClient);
   container.bind<CommandBus>(TYPES.CommandBus).toConstantValue(commandBus);
   container.bind<Events.EventEmitter>(TYPES.EventBus).toConstantValue(eventbus);
+  container.bind<IReadModelFacade>(TYPES.ReadModelFacade).to(ReadModelFacade);
   container.bind<EventHandler>(TYPES.EventHandler).to(EventHandler);
   container.bind<IEventHandler<BookEvent>>(TYPES.Event).to(BookCreatedEventHandler);
   container.bind<IEventHandler<BookEvent>>(TYPES.Event).to(FakeNotificationEventHandler);

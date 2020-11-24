@@ -13,6 +13,9 @@ export const TYPES = {
   // Application Services
   BookApplication: Symbol('BookApplication'),
 
+  // Read Model Facade (for book)
+  ReadModelFacade: Symbol('ReadModelFacade'),
+
   // Command Bus
   CommandBus: Symbol('CommandBus'),
 

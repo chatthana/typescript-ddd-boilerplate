@@ -13,41 +13,28 @@ import { ok } from '../processors/response';
 import { CommandBus } from '@infrastructure/commandBus';
 import { CreateBookCommand } from '@commands/book/CreateBook';
 import { UpdateBookAuthorCommand } from '@commands/book/UpdateBookAuthor';
-
-import Redis from 'ioredis';
 import { NotFoundException } from '@core/ApplicationError';
 import { UpdateBookCommand } from '@commands/book/UpdateBook';
+import { IReadModelFacade } from '@domain/book/ReadModel';
 
 @controller('/api/v1/books')
 export class BookController {
   constructor(
     @inject(TYPES.CommandBus) private readonly commandBus: CommandBus,
-    @inject(TYPES.Redis) private readonly redisClient: Redis.Redis,
+    @inject(TYPES.ReadModelFacade) private readonly readmodel: IReadModelFacade,
   ) {}
 
   @httpGet('/')
   async getAllBooks(@request() req: Request, @response() res: Response) {
-    const books = [];
-    const keys = await this.redisClient.keys('books:*');
-    
-    for (const key of keys) {
-      const result = await this.redisClient.get(key);
-      if (result) {
-        books.push({ guid: key.replace('books:', ''), ...JSON.parse(result) });
-      }
-    }
-
+    const books = await this.readmodel.getAllBooks();
     return res.json(ok('Successfully retrieved all books', books));
 
   }
 
   @httpGet('/:guid')
   async getBookByGuid(@request() req: Request, @response() res: Response) {
-    const book = await this.redisClient.get(req.params.guid);
-    if (!book) {
-      throw new NotFoundException('The requested book does not exist');
-    }
-    return res.json(ok('Successfully retrieve the book', JSON.parse(book)));
+    const book = await this.readmodel.getBookById(req.params.guid);
+    return res.json(ok('Successfully retrieve the book', book));
   }
 
   @httpPost('/')
