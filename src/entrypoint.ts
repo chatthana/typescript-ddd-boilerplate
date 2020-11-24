@@ -30,6 +30,7 @@ import { BookAuthorChangedEventHandler } from '@eventHandlers/book/BookAuthorCha
 import { UpdateBookCommand } from '@commands/book/UpdateBook';
 import { UpdateBookCommandHandler } from '@commandHandlers/book/UpdateBookCommandHandler';
 import { BookUpdatedEventHandler } from '@eventHandlers/book/BookUpdatedEventHandler';
+import { FakeNotificationEventHandler } from '@eventHandlers/book/FakeNotificationEventHandler';
 
 const initialise = async () => {
   const container = new Container();
@@ -51,6 +52,7 @@ const initialise = async () => {
   container.bind<Events.EventEmitter>(TYPES.EventBus).toConstantValue(eventbus);
   container.bind<EventHandler>(TYPES.EventHandler).to(EventHandler);
   container.bind<IEventHandler<BookEvent>>(TYPES.Event).to(BookCreatedEventHandler);
+  container.bind<IEventHandler<BookEvent>>(TYPES.Event).to(FakeNotificationEventHandler);
   container.bind<IEventHandler<BookEvent>>(TYPES.Event).to(BookAuthorChangedEventHandler);
   container.bind<IEventHandler<BookEvent>>(TYPES.Event).to(BookUpdatedEventHandler);
   // ======================================================
