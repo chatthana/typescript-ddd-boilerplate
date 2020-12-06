@@ -1,11 +1,16 @@
-import { injectable } from "inversify";
+import { TYPES } from "@constants/types";
+import { IEventHandler } from "@core/IEventHandler";
+import { BookEvent } from "@domain/book/events";
+import { injectable, multiInject } from "inversify";
 
 @injectable()
 export class EventHandler {
-  constructor() {}
+  constructor(
+    @multiInject(TYPES.Event) private readonly eventHandlers: IEventHandler<BookEvent>[],
+  ) {}
 
-  initialise(handlers: any) {
-    for (const handler of handlers) {
+  initialise() {
+    for (const handler of this.eventHandlers) {
       handler.handle();
     }
   }
