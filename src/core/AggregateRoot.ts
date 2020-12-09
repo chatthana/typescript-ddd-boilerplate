@@ -1,5 +1,4 @@
-import e from 'express';
-import { v4 as UUID } from 'uuid';
+import { nanoid } from 'nanoid'
 import { IEvent } from './IEvent';
 
 export abstract class AggregateRoot {
@@ -8,7 +7,7 @@ export abstract class AggregateRoot {
   private __changes: any[] = [];
 
   constructor(guid?: string) {
-    this.guid = guid || UUID();
+    this.guid = guid || nanoid();
   }
 
   public getUncommittedEvents(): IEvent[] {
